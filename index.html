@@ -184,4 +184,154 @@
 </head>
 <body>
 
-    <div class="bg-hearts" id="
+    <div class="bg-hearts" id="bg-hearts"></div>
+
+    <div class="card" id="question-card">
+        <div class="photo-frame">
+            <img src="https://media.tenor.com/26XF9F5l0eAAAAAi/mocha-mochi.gif" alt="Pareja" id="main-image">
+        </div>
+        
+        <h1>ELA, <br>¿Quieres ser mi San Valentín? ❤️</h1>
+        <p class="subtitle">Prometo comprarte chocolates 🍫</p>
+
+        <div class="btn-group">
+            <button id="yesBtn" onclick="handleYesClick()">¡Sí, claro!</button>
+            <button id="noBtn" onclick="handleNoClick()">No</button>
+        </div>
+    </div>
+
+    <div class="card" id="success-container">
+        <img src="https://media.tenor.com/gUiu1zyxfzYAAAAi/bear-kiss-bear-kisses.gif" class="success-img" alt="Besito">
+        <h1>¡Sabía que dirías que sí! 💖</h1>
+        <p class="subtitle" style="font-size: 1.3rem; color: var(--primary-color);">Nos vemos el 14, te quiero mucho.</p>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <script>
+        // CONFIGURACIÓN INTERNA
+        let yesClicks = 0; // Contador de clicks en el "Sí"
+        const trickThreshold = 3; // Cuántos clicks "falsos" antes de aceptar el sí real
+        let yesBtnSize = 1;
+        
+        const messages = [
+            "¿Segura?",
+            "Piénsalo bien...",
+            "Me vas a romper el cora 💔",
+            "Mira que lloro...",
+            "¡No seas así!",
+            "¡Di que sí por favor!",
+            "No hay otra opción 😈"
+        ];
+
+        const trickMessages = [
+            "¡Ups! Botón equivocado 😜",
+            "Intenta de nuevo...",
+            "Casi, pero no 😂",
+            "¡Te atrapé!"
+        ];
+
+        // Lógica al hacer click en "Sí"
+        function handleYesClick() {
+            // Si aún no ha superado los clicks de "broma"
+            if (yesClicks < trickThreshold) {
+                // Actúa como si fuera un NO (la broma)
+                showFloatingText(trickMessages[yesClicks % trickMessages.length]);
+                growYesButton(); 
+                yesClicks++;
+            } else {
+                // ACEPTACIÓN REAL
+                acceptProposal();
+            }
+        }
+
+        // Lógica al hacer click en "No"
+        function handleNoClick() {
+            growYesButton();
+            const noBtn = document.getElementById('noBtn');
+            // Cambia el texto del botón No aleatoriamente
+            noBtn.innerText = messages[Math.floor(Math.random() * messages.length)];
+            
+            // Efecto visual en el botón No (vibración leve)
+            noBtn.style.transform = 'translateX(5px)';
+            setTimeout(() => noBtn.style.transform = 'translateX(0)', 100);
+        }
+
+        // Función para hacer crecer el botón Sí
+        function growYesButton() {
+            yesBtnSize += 0.3;
+            const yesBtn = document.getElementById('yesBtn');
+            yesBtn.style.transform = `scale(${yesBtnSize})`;
+            
+            // Opcional: mover el botón NO de lugar si quieres que sea imposible
+            // moveNoButton(); 
+        }
+
+        function showFloatingText(text) {
+            const btnGroup = document.querySelector('.btn-group');
+            const bubble = document.createElement('div');
+            bubble.className = 'bubble';
+            bubble.innerText = text;
+            
+            // Posición aleatoria cerca de los botones
+            const randomX = (Math.random() - 0.5) * 100;
+            bubble.style.left = `calc(50% + ${randomX}px)`;
+            bubble.style.top = '-20px';
+            
+            btnGroup.appendChild(bubble);
+            
+            setTimeout(() => bubble.remove(), 2000);
+        }
+
+        function acceptProposal() {
+            document.getElementById('question-card').style.display = 'none';
+            document.getElementById('success-container').style.display = 'flex';
+            
+            // Lanzar confeti
+            var duration = 3000;
+            var end = Date.now() + duration;
+
+            (function frame() {
+                confetti({
+                    particleCount: 5,
+                    angle: 60,
+                    spread: 55,
+                    origin: { x: 0 },
+                    colors: ['#ff4d6d', '#ff8fa3', '#ffffff']
+                });
+                confetti({
+                    particleCount: 5,
+                    angle: 120,
+                    spread: 55,
+                    origin: { x: 1 },
+                    colors: ['#ff4d6d', '#ff8fa3', '#ffffff']
+                });
+
+                if (Date.now() < end) {
+                    requestAnimationFrame(frame);
+                }
+            }());
+        }
+
+        // Generar corazones de fondo
+        function createBackgroundHearts() {
+            const container = document.getElementById('bg-hearts');
+            const heart = document.createElement('div');
+            heart.classList.add('bg-heart');
+            heart.innerHTML = '❤';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = Math.random() * 5 + 5 + 's';
+            heart.style.opacity = Math.random() * 0.5;
+            heart.style.fontSize = Math.random() * 30 + 10 + 'px';
+            
+            container.appendChild(heart);
+            
+            setTimeout(() => {
+                heart.remove();
+            }, 10000);
+        }
+
+        setInterval(createBackgroundHearts, 500);
+    </script>
+</body>
+</html>
