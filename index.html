@@ -9,7 +9,6 @@
 
         :root {
             --primary-color: #ff4d6d;
-            --secondary-color: #ff8fa3;
             --bg-color: #fff0f3;
             --text-color: #590d22;
         }
@@ -27,43 +26,40 @@
             flex-direction: column;
         }
 
-        /* Fondo de corazones flotantes */
+        /* Fondo animado */
         .bg-hearts {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            overflow: hidden;
-            z-index: 0;
             pointer-events: none;
+            z-index: 0;
         }
 
         .bg-heart {
             position: absolute;
             color: rgba(255, 77, 109, 0.2);
-            font-size: 20px;
-            animation: floatUp 15s linear infinite;
-            bottom: -10vh;
+            animation: floatBackground 10s infinite linear;
         }
 
-        /* Tarjeta Principal (Glassmorphism) */
+        /* Tarjeta Principal */
         .card {
             background: rgba(255, 255, 255, 0.85);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
             border: 2px solid rgba(255, 255, 255, 0.9);
-            padding: 40px 30px;
+            padding: 40px 20px;
             border-radius: 30px;
             box-shadow: 0 20px 50px rgba(255, 77, 109, 0.15);
             text-align: center;
-            max-width: 400px;
+            max-width: 380px;
             width: 90%;
             z-index: 10;
-            transition: transform 0.3s ease;
+            position: relative;
         }
 
-        /* Área de la Foto Personalizada */
+        /* Foto */
         .photo-frame {
             width: 180px;
             height: 180px;
@@ -72,13 +68,13 @@
             border: 5px solid white;
             box-shadow: 0 10px 25px rgba(255, 77, 109, 0.2);
             overflow: hidden;
-            position: relative;
+            background: #fff;
         }
 
         .photo-frame img {
             width: 100%;
             height: 100%;
-            object-fit: cover; /* Esto asegura que la foto no se estire */
+            object-fit: cover;
         }
 
         h1 {
@@ -94,91 +90,85 @@
             margin-bottom: 30px;
         }
 
-        /* Botones */
+        /* Botones - Ajustado para evitar solapamiento rápido */
         .btn-group {
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 15px;
-            flex-wrap: wrap;
-            min-height: 60px; /* Espacio para que crezca */
+            gap: 20px;
+            position: relative;
+            flex-wrap: wrap; /* Importante para que bajen si no caben */
+            min-height: 80px;
         }
 
         button {
-            padding: 12px 25px;
-            font-size: 1.1rem;
+            padding: 15px 30px;
+            font-size: 1.2rem;
             border: none;
             border-radius: 50px;
             cursor: pointer;
             font-family: 'Nunito', sans-serif;
             font-weight: 800;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
             position: relative;
+            z-index: 20; /* Nivel base */
         }
 
         #yesBtn {
             background-color: var(--primary-color);
             color: white;
-            box-shadow: 0 5px 15px rgba(255, 77, 109, 0.4);
-            z-index: 20;
+            /* Transición suave para el crecimiento */
+            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
         #noBtn {
-            background-color: #fff;
-            color: var(--text-color);
-            border: 2px solid #f0f0f0;
+            background-color: #ffb7b2;
+            color: #8c2f2f;
+            z-index: 30; /* El NO estará por encima al principio */
         }
 
-        /* Pantalla de Éxito */
+        /* ESTILO DE BURBUJAS (Del primer código) */
+        .bubble {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(4px);
+            padding: 10px 20px;
+            border-radius: 20px;
+            color: #d63384;
+            font-weight: 800;
+            font-size: 0.9rem;
+            pointer-events: none;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+            white-space: nowrap;
+            z-index: 100;
+            animation: floatUpBubble 2s ease-out forwards;
+        }
+
+        @keyframes floatUpBubble {
+            0% { transform: translateY(0) scale(0.8) rotate(0deg); opacity: 0; }
+            20% { opacity: 1; transform: translateY(-20px) scale(1.1) rotate(-5deg); }
+            100% { transform: translateY(-100px) scale(1) rotate(5deg); opacity: 0; }
+        }
+
+        @keyframes floatBackground {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            50% { opacity: 0.6; }
+            100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+        }
+
+        /* Pantalla de éxito */
         #success-container {
             display: none;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            z-index: 20;
-            text-align: center;
-            animation: fadeIn 1s ease;
         }
 
         .success-img {
             width: 250px;
             border-radius: 20px;
             margin-bottom: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        }
-
-        /* Animaciones */
-        @keyframes floatUp {
-            0% { transform: translateY(0) rotate(0deg); opacity: 0; }
-            20% { opacity: 0.8; }
-            100% { transform: translateY(-120vh) rotate(360deg); opacity: 0; }
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.9); }
-            to { opacity: 1; transform: scale(1); }
-        }
-
-        /* Burbujas de texto flotantes */
-        .bubble {
-            position: absolute;
-            background: white;
-            padding: 8px 15px;
-            border-radius: 15px;
-            font-weight: bold;
-            color: var(--primary-color);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            pointer-events: none;
-            font-size: 0.9rem;
-            z-index: 100;
-            opacity: 0;
-            animation: popUp 2s forwards;
-        }
-
-        @keyframes popUp {
-            0% { opacity: 0; transform: translateY(10px) scale(0.8); }
-            20% { opacity: 1; transform: translateY(0) scale(1.1); }
-            100% { opacity: 0; transform: translateY(-50px); }
         }
     </style>
 </head>
@@ -188,119 +178,129 @@
 
     <div class="card" id="question-card">
         <div class="photo-frame">
-            <img src="https://media.tenor.com/26XF9F5l0eAAAAAi/mocha-mochi.gif" alt="Pareja" id="main-image">
+            <img src="iamge.jpeg" 
+                 alt="Nosotros" 
+                 id="main-img"
+                 onerror="this.onerror=null;this.src='https://media.tenor.com/26XF9F5l0eAAAAAi/mocha-mochi.gif';">
         </div>
         
         <h1>ELA, <br>¿Quieres ser mi San Valentín? ❤️</h1>
         <p class="subtitle">Prometo comprarte chocolates 🍫</p>
 
         <div class="btn-group">
-            <button id="yesBtn" onclick="handleYesClick()">¡Sí, claro!</button>
-            <button id="noBtn" onclick="handleNoClick()">No</button>
+            <button id="yesBtn" onclick="handleYes()">Sí 💖</button>
+            <button id="noBtn" onclick="handleNo()">No 😢</button>
         </div>
     </div>
 
     <div class="card" id="success-container">
-        <img src="https://media.tenor.com/gUiu1zyxfzYAAAAi/bear-kiss-bear-kisses.gif" class="success-img" alt="Besito">
+        <div class="photo-frame" style="border-color: #ff4d6d;">
+             <img src="https://media.tenor.com/gUiu1zyxfzYAAAAi/bear-kiss-bear-kisses.gif" class="success-img" alt="Besito">
+        </div>
         <h1>¡Sabía que dirías que sí! 💖</h1>
-        <p class="subtitle" style="font-size: 1.3rem; color: var(--primary-color);">Nos vemos el 14, te quiero mucho.</p>
+        <p class="subtitle" style="color: var(--primary-color);">Nos vemos el 14, tqm.</p>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
     <script>
-        // CONFIGURACIÓN INTERNA
-        let yesClicks = 0; // Contador de clicks en el "Sí"
-        const trickThreshold = 3; // Cuántos clicks "falsos" antes de aceptar el sí real
-        let yesBtnSize = 1;
+        let yesClicks = 0;
+        let yesScale = 1;
+        const trickThreshold = 3; 
         
-        const messages = [
+        // Variable para saber si el juego ha comenzado (si ha presionado NO al menos una vez)
+        let gameStarted = false;
+
+        const bubblePhrases = [
+            "Apuraaa",
+            "No seas malita",
+            "Mueve oye",
+            "TE COMPRO CHOCOLATES",
+            "Lloro verás",
+            "Dame chance",
             "¿Segura?",
-            "Piénsalo bien...",
-            "Me vas a romper el cora 💔",
-            "Mira que lloro...",
-            "¡No seas así!",
-            "¡Di que sí por favor!",
-            "No hay otra opción 😈"
+            "¡Di que sí!"
         ];
 
-        const trickMessages = [
-            "¡Ups! Botón equivocado 😜",
-            "Intenta de nuevo...",
-            "Casi, pero no 😂",
-            "¡Te atrapé!"
-        ];
+        function handleNo() {
+            gameStarted = true; // AHORA SÍ se activa el botón de Sí
+            createBubble();
+            growYesButton();
+        }
 
-        // Lógica al hacer click en "Sí"
-        function handleYesClick() {
-            // Si aún no ha superado los clicks de "broma"
+        function handleYes() {
+            // Si NO ha presionado el botón NO todavía, el SI no hace nada.
+            if (!gameStarted) {
+                return; 
+            }
+
+            // Si ya empezó el juego, verificamos los clicks de "broma"
             if (yesClicks < trickThreshold) {
-                // Actúa como si fuera un NO (la broma)
-                showFloatingText(trickMessages[yesClicks % trickMessages.length]);
+                createBubble(); // Salen burbujas igual que en el NO
                 growYesButton(); 
                 yesClicks++;
             } else {
-                // ACEPTACIÓN REAL
+                // Aceptación real
                 acceptProposal();
             }
         }
 
-        // Lógica al hacer click en "No"
-        function handleNoClick() {
-            growYesButton();
-            const noBtn = document.getElementById('noBtn');
-            // Cambia el texto del botón No aleatoriamente
-            noBtn.innerText = messages[Math.floor(Math.random() * messages.length)];
-            
-            // Efecto visual en el botón No (vibración leve)
-            noBtn.style.transform = 'translateX(5px)';
-            setTimeout(() => noBtn.style.transform = 'translateX(0)', 100);
-        }
-
-        // Función para hacer crecer el botón Sí
         function growYesButton() {
-            yesBtnSize += 0.3;
-            const yesBtn = document.getElementById('yesBtn');
-            yesBtn.style.transform = `scale(${yesBtnSize})`;
+            // Hacemos que crezca un poco más lento (0.15) para dar tiempo a clickear el NO varias veces
+            yesScale += 0.15; 
+            const btn = document.getElementById('yesBtn');
+            btn.style.transform = `scale(${yesScale})`;
             
-            // Opcional: mover el botón NO de lugar si quieres que sea imposible
-            // moveNoButton(); 
+            // Si el botón ya es muy grande, aumentamos su z-index para que tape todo
+            if (yesScale > 2.5) {
+                btn.style.zIndex = 100;
+                btn.innerText = "¡YA DI QUE SÍ! 😠❤️";
+            }
         }
 
-        function showFloatingText(text) {
-            const btnGroup = document.querySelector('.btn-group');
+        function createBubble() {
+            const btnContainer = document.querySelector('.btn-group');
+            const noBtn = document.getElementById('noBtn');
             const bubble = document.createElement('div');
-            bubble.className = 'bubble';
-            bubble.innerText = text;
+            bubble.classList.add('bubble');
             
-            // Posición aleatoria cerca de los botones
+            bubble.innerText = bubblePhrases[Math.floor(Math.random() * bubblePhrases.length)];
+            
+            // Posicionar la burbuja cerca del botón NO
+            // Usamos coordenadas relativas al contenedor
             const randomX = (Math.random() - 0.5) * 100;
+            const randomY = (Math.random() - 1) * 60 - 20; 
+            
             bubble.style.left = `calc(50% + ${randomX}px)`;
-            bubble.style.top = '-20px';
-            
-            btnGroup.appendChild(bubble);
-            
-            setTimeout(() => bubble.remove(), 2000);
+            bubble.style.top = `${randomY}px`;
+
+            btnContainer.appendChild(bubble);
+
+            setTimeout(() => {
+                bubble.remove();
+            }, 2000);
         }
 
         function acceptProposal() {
             document.getElementById('question-card').style.display = 'none';
             document.getElementById('success-container').style.display = 'flex';
-            
-            // Lanzar confeti
+            launchConfetti();
+        }
+
+        function launchConfetti() {
             var duration = 3000;
             var end = Date.now() + duration;
 
             (function frame() {
                 confetti({
-                    particleCount: 5,
+                    particleCount: 7,
                     angle: 60,
                     spread: 55,
                     origin: { x: 0 },
                     colors: ['#ff4d6d', '#ff8fa3', '#ffffff']
                 });
                 confetti({
-                    particleCount: 5,
+                    particleCount: 7,
                     angle: 120,
                     spread: 55,
                     origin: { x: 1 },
@@ -313,25 +313,24 @@
             }());
         }
 
-        // Generar corazones de fondo
-        function createBackgroundHearts() {
+        function createHeart() {
             const container = document.getElementById('bg-hearts');
             const heart = document.createElement('div');
             heart.classList.add('bg-heart');
-            heart.innerHTML = '❤';
+            heart.innerHTML = '❤️';
             heart.style.left = Math.random() * 100 + 'vw';
-            heart.style.animationDuration = Math.random() * 5 + 5 + 's';
-            heart.style.opacity = Math.random() * 0.5;
-            heart.style.fontSize = Math.random() * 30 + 10 + 'px';
+            heart.style.animationDuration = Math.random() * 3 + 4 + 's';
+            heart.style.opacity = Math.random() * 0.5 + 0.2;
+            heart.style.fontSize = Math.random() * 20 + 10 + 'px';
             
             container.appendChild(heart);
             
             setTimeout(() => {
                 heart.remove();
-            }, 10000);
+            }, 8000);
         }
 
-        setInterval(createBackgroundHearts, 500);
+        setInterval(createHeart, 500);
     </script>
 </body>
 </html>
