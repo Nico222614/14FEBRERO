@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Para ELA ❤️</title>
+    <title>Para Pau ❤️</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap');
 
@@ -112,7 +112,7 @@
             transition: all 0.3s ease;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
             position: relative;
-            z-index: 20; /* Nivel base */
+            z-index: 20; 
         }
 
         #yesBtn {
@@ -125,10 +125,10 @@
         #noBtn {
             background-color: #ffb7b2;
             color: #8c2f2f;
-            z-index: 30; /* El NO estará por encima al principio */
+            z-index: 30; 
         }
 
-        /* ESTILO DE BURBUJAS (Del primer código) */
+        /* Estilo Burbujas */
         .bubble {
             position: absolute;
             background: rgba(255, 255, 255, 0.9);
@@ -181,10 +181,10 @@
             <img src="image.jpeg" 
                  alt="Nosotros" 
                  id="main-img"
-                 onerror="this.onerror=null;this.src='https://media.tenor.com/26XF9F5l0eAAAAAi/mocha-mochi.gif';">
+                 onerror="this.onerror=null;this.src='https://media.tenor.com/ivKSHK0sW6oAAAAi/mocha-bear-hearts.gif';">
         </div>
         
-        <h1>ELA, <br>¿Quieres ser mi San Valentín? ❤️</h1>
+        <h1>Pau, <br>¿Quieres ser mi San Valentín? ❤️</h1>
         <p class="subtitle">Prometo comprarte chocolates 🍫</p>
 
         <div class="btn-group">
@@ -197,82 +197,89 @@
         <div class="photo-frame" style="border-color: #ff4d6d;">
              <img src="https://media.tenor.com/gUiu1zyxfzYAAAAi/bear-kiss-bear-kisses.gif" class="success-img" alt="Besito">
         </div>
-        <h1>¡Sabía que dirías que sí! 💖</h1>
+        <h1>¡Sabía que aceptarías! ❤️</h1>
         <p class="subtitle" style="color: var(--primary-color);">Nos vemos el 14, tqm.</p>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
     <script>
-        let yesClicks = 0;
         let yesScale = 1;
-        const trickThreshold = 3; 
         
-        // Variable para saber si el juego ha comenzado (si ha presionado NO al menos una vez)
-        let gameStarted = false;
+        // Variable interruptor: Empieza APAGADA (false)
+        let noWasClicked = false;
 
         const bubblePhrases = [
-            "Apuraaa",
-            "No seas malita",
+            "mmmmm ya",
+            "Piensalo bien",
+            "Segurisima",
+            "Buenooooooo",
             "Mueve oye",
-            "TE COMPRO CHOCOLATES",
-            "Lloro verás",
-            "Dame chance",
-            "¿Segura?",
-            "¡Di que sí!"
+            "DI QUE SI!"
         ];
 
+        const buttonPhrases = [
+            "¿Segura?",
+            "mueveeee",
+            "🥺🥺🥺",
+            "Por favor",
+            "No seas así",
+            "apuraaaaa",
+            "¿Siii?",
+            "No 💔"
+        ];
+        
+        let phraseIndex = 0;
+
         function handleNo() {
-            gameStarted = true; // AHORA SÍ se activa el botón de Sí
+            // AL PRESIONAR NO: Se activa el interruptor. Ahora el botón SÍ funcionará.
+            noWasClicked = true; 
+            
+            // Cambiar texto del botón No
+            const noBtn = document.getElementById('noBtn');
+            noBtn.innerText = buttonPhrases[phraseIndex % buttonPhrases.length];
+            phraseIndex++;
+
+            // Crear burbuja y hacer crecer el botón Sí
             createBubble();
             growYesButton();
         }
 
         function handleYes() {
-            // Si NO ha presionado el botón NO todavía, el SI no hace nada.
-            if (!gameStarted) {
-                return; 
+            // SI AÚN NO HA PRESIONADO 'NO', EL BOTÓN SÍ NO HACE NADA
+            if (!noWasClicked) {
+                return; // Se detiene aquí, no ejecuta nada más.
             }
 
-            // Si ya empezó el juego, verificamos los clicks de "broma"
-            if (yesClicks < trickThreshold) {
-                createBubble(); // Salen burbujas igual que en el NO
-                growYesButton(); 
-                yesClicks++;
-            } else {
-                // Aceptación real
-                acceptProposal();
-            }
+            // Si ya presionó 'No' antes, entonces sí acepta.
+            acceptProposal();
         }
 
         function growYesButton() {
-            // Hacemos que crezca un poco más lento (0.15) para dar tiempo a clickear el NO varias veces
-            yesScale += 0.15; 
+            // Crece un poco
+            yesScale += 0.2; 
             const btn = document.getElementById('yesBtn');
             btn.style.transform = `scale(${yesScale})`;
-            
-            // Si el botón ya es muy grande, aumentamos su z-index para que tape todo
-            if (yesScale > 2.5) {
-                btn.style.zIndex = 100;
-                btn.innerText = "¡YA DI QUE SÍ! 😠❤️";
-            }
         }
 
         function createBubble() {
+            // Usamos frases aleatorias de tu lista
+            const text = bubblePhrases[Math.floor(Math.random() * bubblePhrases.length)];
+            
             const btnContainer = document.querySelector('.btn-group');
             const noBtn = document.getElementById('noBtn');
             const bubble = document.createElement('div');
             bubble.classList.add('bubble');
+            bubble.innerText = text;
             
-            bubble.innerText = bubblePhrases[Math.floor(Math.random() * bubblePhrases.length)];
+            // Posicionamiento calculado cerca del botón NO
+            const rect = noBtn.getBoundingClientRect();
+            // Truco matemático para que salga cerca pero variado
+            const randomX = (Math.random() - 0.5) * 60; 
             
-            // Posicionar la burbuja cerca del botón NO
-            // Usamos coordenadas relativas al contenedor
-            const randomX = (Math.random() - 0.5) * 100;
-            const randomY = (Math.random() - 1) * 60 - 20; 
-            
-            bubble.style.left = `calc(50% + ${randomX}px)`;
-            bubble.style.top = `${randomY}px`;
+            // Posicionamos relativo al botón NO pero dentro del grupo
+            bubble.style.left = (noBtn.offsetLeft + noBtn.offsetWidth / 2 + randomX) + 'px';
+            bubble.style.top = (noBtn.offsetTop - 30) + 'px';
 
             btnContainer.appendChild(bubble);
 
